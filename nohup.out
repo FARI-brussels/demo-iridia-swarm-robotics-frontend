@@ -1,0 +1,188 @@
+Server listening at http://localhost:3000
+
+> test@0.0.0 dev
+> vite
+
+
+  VITE v5.1.3  ready in 163 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+Server listening at http://localhost:3000
+
+> test@0.0.0 dev
+> vite
+
+
+  VITE v5.1.3  ready in 193 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+Server listening at http://localhost:3000
+
+> test@0.0.0 dev
+> vite --port=5000
+
+
+  VITE v5.1.3  ready in 151 ms
+
+  ➜  Local:   http://localhost:5000/
+  ➜  Network: use --host to expose
+Server listening at http://localhost:3000
+
+> test@0.0.0 dev
+> vite --port=5000
+
+
+  VITE v5.1.3  ready in 182 ms
+
+  ➜  Local:   http://localhost:5000/
+  ➜  Network: use --host to expose
+Files in the public directory are served at the root path.
+Instead of /public/js/main.js, use /js/main.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/loaders.js, use /js/loaders.js.
+Server listening at http://localhost:3000
+
+> test@0.0.0 dev
+> vite --port=5000
+
+
+  VITE v5.1.3  ready in 190 ms
+
+  ➜  Local:   http://localhost:5000/
+  ➜  Network: use --host to expose
+Server listening at http://localhost:3000
+
+> test@0.0.0 dev
+> vite --port=5000
+
+
+  VITE v5.1.3  ready in 155 ms
+
+  ➜  Local:   http://localhost:5000/
+  ➜  Network: use --host to expose
+Server listening at http://localhost:3000
+
+> test@0.0.0 dev
+> vite --port=5000
+
+
+  VITE v5.1.3  ready in 157 ms
+
+  ➜  Local:   http://localhost:5000/
+  ➜  Network: use --host to expose
+Server listening at http://localhost:3000
+
+> test@0.0.0 dev
+> vite --port=5000
+
+
+  VITE v5.1.3  ready in 192 ms
+
+  ➜  Local:   http://localhost:5000/
+  ➜  Network: use --host to expose
+Server listening at http://localhost:3000
+
+> test@0.0.0 dev
+> vite --port=5000
+
+
+  VITE v5.1.3  ready in 147 ms
+
+  ➜  Local:   http://localhost:5000/
+  ➜  Network: use --host to expose
+Files in the public directory are served at the root path.
+Instead of /public/js/main.js, use /js/main.js.
+Server listening at http://localhost:3000
+
+> test@0.0.0 dev
+> vite --port=5000
+
+
+  VITE v5.1.3  ready in 177 ms
+
+  ➜  Local:   http://localhost:5000/
+  ➜  Network: use --host to expose
+Files in the public directory are served at the root path.
+Instead of /public/js/main.js, use /js/main.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/loaders.js, use /js/loaders.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/main.js, use /js/main.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/loaders.js, use /js/loaders.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/main.js, use /js/main.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/loaders.js, use /js/loaders.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/main.js, use /js/main.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/loaders.js, use /js/loaders.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/main.js, use /js/main.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/loaders.js, use /js/loaders.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/main.js, use /js/main.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/loaders.js, use /js/loaders.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/main.js, use /js/main.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/loaders.js, use /js/loaders.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/main.js, use /js/main.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/loaders.js, use /js/loaders.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/main.js, use /js/main.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/loaders.js, use /js/loaders.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/main.js, use /js/main.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/loaders.js, use /js/loaders.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/main.js, use /js/main.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/loaders.js, use /js/loaders.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/main.js, use /js/main.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/loaders.js, use /js/loaders.js.
+Server listening at http://localhost:3000
+
+> test@0.0.0 dev
+> vite --port=5000
+
+
+  VITE v5.1.3  ready in 192 ms
+
+  ➜  Local:   http://localhost:5000/
+  ➜  Network: use --host to expose
+Server listening at http://localhost:3000
+
+> test@0.0.0 dev
+> vite --port=5000
+
+
+  VITE v5.1.3  ready in 161 ms
+
+  ➜  Local:   http://localhost:5000/
+  ➜  Network: use --host to expose
+
+> test@0.0.0 dev
+> vite --port=5000
+
+Server listening at http://localhost:3000
+
+  VITE v5.1.3  ready in 153 ms
+
+  ➜  Local:   http://localhost:5000/
+  ➜  Network: use --host to expose
+Files in the public directory are served at the root path.
+Instead of /public/js/main.js, use /js/main.js.
+Files in the public directory are served at the root path.
+Instead of /public/js/loaders.js, use /js/loaders.js.
