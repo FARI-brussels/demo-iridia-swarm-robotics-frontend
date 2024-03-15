@@ -1,10 +1,10 @@
 Install dependencies : 
-´´´bash
+```bash
 npm install
-´´´
+```
 
 Run project
-´´´bash
+```bash
 npm run dev
-´´´
+```
 
