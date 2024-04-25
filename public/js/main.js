@@ -26,6 +26,7 @@ for (let i = 0; i < N; i++) {
 const loader = new GLTFLoader();
 loader.load("./assets/swarm_map.glb", function (gltf) {
   scene.add(gltf.scene);
+  gltf.scene.position.x = 3 // the object has a bit of an offset to the left for some reason, adjust this value if necessary (default is 1)
 }, undefined, function (error) {
   console.error('Error loading model:', error);
 });
@@ -62,7 +63,7 @@ document.body.appendChild(renderer.domElement);
 
 
 //uncomment for debugging
-// const gridHelper = new THREE.GridHelper(2000, 20);
+// const gridHelper = new THREE.GridHelper(200, 20);
 // const axesHelper = new THREE.AxesHelper(1000);
 // const cameraHelper = new THREE.CameraHelper(camera);
 
@@ -77,6 +78,7 @@ controls.enableDamping = true; // Optional: this enables inertia for smooth came
 controls.dampingFactor = 0.05;
 controls.screenSpacePanning = false;
 controls.enableZoom = false; // comment out to enable zoom
+
 
 
 // Function to update drone positions based on the latest message from ROS
