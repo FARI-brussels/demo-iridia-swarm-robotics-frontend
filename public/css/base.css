@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+@font-face {
+  font-family: "Plain";
+  src: url(./assets/fonts/Plain-Regular.otf);
+}
+
+* {
+  margin:0;
+  padding:0;
+  box-sizing: border-box;
+}
+
+body, html{
+  overflow-x: hidden;
+  background-color: #183e91;
+}
+
+canvas {
+  position: absolute;
+  top:0;
+  left:0;
+  z-index: 1;
+}
