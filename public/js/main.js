@@ -13,8 +13,8 @@ for (let i = 0; i < N; i++) {
   const drone = loadGLB(scene, "./assets/drone.glb", null,
     {
       scale: { x: 0.02, y: 0.02, z: 0.02 },
-      position: { x: 1000, y: 1000, z: 20 },
-      rotation: { x: Math.PI / 2, y: 0, z: 0 },
+      position: { x: 1000, y: 1000, z: 5 },
+      rotation: { x:  Math.PI/2, y: 0, z: 0 },
     },
     (loadedDrone) => { // This callback function is executed after the drone is loaded
       drones.push(loadedDrone); // Append the loaded drone to the drones array
@@ -27,6 +27,7 @@ const loader = new GLTFLoader();
 loader.load("./assets/swarm_map.glb", function (gltf) {
   scene.add(gltf.scene);
   gltf.scene.position.x = 3 // the object has a bit of an offset to the left for some reason, adjust this value if necessary (default is 1)
+  gltf.scene.rotation.x = Math.PI/2
 }, undefined, function (error) {
   console.error('Error loading model:', error);
 });
@@ -44,13 +45,13 @@ const camera = new THREE.OrthographicCamera(
   0.01, 1000
 );
 
-camera.position.set(0, 20, 60);
+camera.position.set(0, -60, 20);
 
 //Set scene lighting
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 2);
 const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-directionalLight.position.set(0, 1, 0);
+directionalLight.position.set(0, 0, 1);
 scene.add(ambientLight);
 scene.add(directionalLight);
 
@@ -63,13 +64,13 @@ document.body.appendChild(renderer.domElement);
 
 
 //uncomment for debugging
-// const gridHelper = new THREE.GridHelper(200, 20);
-// const axesHelper = new THREE.AxesHelper(1000);
-// const cameraHelper = new THREE.CameraHelper(camera);
+const gridHelper = new THREE.GridHelper(200, 20);
+const axesHelper = new THREE.AxesHelper(1000);
+const cameraHelper = new THREE.CameraHelper(camera);
 
-// scene.add(gridHelper);
-// scene.add(axesHelper);
-// scene.add(cameraHelper);
+//scene.add(gridHelper);
+//scene.add(axesHelper);
+//scene.add(cameraHelper);
 
 
 // Create OrbitControls
@@ -89,7 +90,7 @@ function updateDronePositions(newPositions) {
     if (drone) {
       drone.position.x = 102 - position.position.x / 10;
       drone.position.y = - 40 + position.position.y / 10;
-      drone.position.z = 20// Assuming you want to set z as well
+      console.log(drone.position)
     }
   });
 }
