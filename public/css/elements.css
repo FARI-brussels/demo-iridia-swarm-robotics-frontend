@@ -59,3 +59,7 @@ footer {
   gap: 2rem;
   padding: 2rem 0;
 }
+
+.backdrop {
+  margin-top: 6rem;
+}

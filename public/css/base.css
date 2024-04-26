@@ -16,6 +16,13 @@ body, html{
   background-color: #183e91;
 }
 
+body {
+  height: 100vh;
+  width: 100vw;
+  /* margin-top: 7rem; */
+  /* background-image: url('../../assets/1920x1080_Backdrop.svg'); */
+}
+
 canvas {
   position: absolute;
   top:0;
