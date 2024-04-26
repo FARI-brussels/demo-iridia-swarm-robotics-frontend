@@ -14,7 +14,7 @@ for (let i = 0; i < N; i++) {
     {
       scale: { x: 0.02, y: 0.02, z: 0.02 },
       position: { x: 1000, y: 1000, z: 5 },
-      rotation: { x:  Math.PI/2, y: 0, z: 0 },
+      rotation: { x: Math.PI / 2, y: 0, z: 0 },
     },
     (loadedDrone) => { // This callback function is executed after the drone is loaded
       drones.push(loadedDrone); // Append the loaded drone to the drones array
@@ -27,7 +27,7 @@ const loader = new GLTFLoader();
 loader.load("./assets/swarm_map.glb", function (gltf) {
   scene.add(gltf.scene);
   gltf.scene.position.x = 3 // the object has a bit of an offset to the left for some reason, adjust this value if necessary (default is 1)
-  gltf.scene.rotation.x = Math.PI/2
+  gltf.scene.rotation.x = Math.PI / 2
 }, undefined, function (error) {
   console.error('Error loading model:', error);
 });
@@ -35,21 +35,12 @@ loader.load("./assets/swarm_map.glb", function (gltf) {
 
 // Set up Camera
 
-const aspectRatio = window.innerWidth / window.innerHeight;
-const frustumHeight = 70;
-const frustumWidth = frustumHeight * aspectRatio;
-
-const camera = new THREE.OrthographicCamera(
-  -frustumWidth / 2, frustumWidth / 2,
-  frustumHeight / 2, -frustumHeight / 2,
-  0.01, 1000
-);
-
-camera.position.set(0, -60, 20);
+const camera = new THREE.PerspectiveCamera(15, window.innerWidth / window.innerHeight, 10, 1000);
+camera.position.set(0, -265, 100);
 
 //Set scene lighting
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
 directionalLight.position.set(0, 0, 1);
 scene.add(ambientLight);
@@ -64,13 +55,13 @@ document.body.appendChild(renderer.domElement);
 
 
 //uncomment for debugging
-const gridHelper = new THREE.GridHelper(200, 20);
-const axesHelper = new THREE.AxesHelper(1000);
-const cameraHelper = new THREE.CameraHelper(camera);
+// const gridHelper = new THREE.GridHelper(200, 20);
+// const axesHelper = new THREE.AxesHelper(1000);
+// const cameraHelper = new THREE.CameraHelper(camera);
 
-//scene.add(gridHelper);
-//scene.add(axesHelper);
-//scene.add(cameraHelper);
+// scene.add(gridHelper);
+// scene.add(axesHelper);
+// scene.add(cameraHelper);
 
 
 // Create OrbitControls
@@ -83,6 +74,7 @@ controls.enableZoom = false; // comment out to enable zoom
 
 
 // Function to update drone positions based on the latest message from ROS
+
 function updateDronePositions(newPositions) {
   newPositions.forEach(position => {
     // Assuming robot_id matches the drone's index in the drones array
@@ -142,12 +134,7 @@ animate()
 
 
 window.addEventListener('resize', () => {
-  const newAspectRatio = window.innerWidth / window.innerHeight;
-  const newFrustumWidth = frustumHeight * newAspectRatio;
-  camera.left = -newFrustumWidth / 2;
-  camera.right = newFrustumWidth / 2;
-  camera.top = frustumHeight / 2;
-  camera.bottom = -frustumHeight / 2;
+  camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
