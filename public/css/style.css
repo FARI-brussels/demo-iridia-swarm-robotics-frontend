@@ -1,30 +1,32 @@
-* {
-  margin:0;
-  padding:0;
-  box-sizing: border-box;
-}
+@import './base.css';
+@import './elements.css';
 
-body, html{
-  overflow-x: hidden;
-}
-
-canvas {
-  position: absolute;
-  top:0;
-  left:0;
-  z-index: 1;
-}
-
-nav{
-  position: relative;
-  color: white;
-  z-index: 2;
-  padding-top: 55rem;
+.title-bar {
+  margin-bottom: auto;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 4rem;
   display: flex;
-  justify-content: space-evenly;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 100%;
+  align-items: center;
+}
+
+.button-container {
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  gap: 1rem;
+  bottom: 220px;
 }
 
 .ui-overlay {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   position: absolute;
   top: 0;
   left: 0;
@@ -34,18 +36,16 @@ nav{
   pointer-events: none; /* Allows click events to pass through to the canvas */
 }
 
-.ui-overlay button {
-  pointer-events: auto; /* Ensure UI elements within the overlay are still interactive */
+.demo-intro, 
+.demo-loading, 
+.demo-active {
+  opacity: 0;
+  visibility: hidden;
+  transition: visibility 0s 0.2s, opacity 0.2s linear;
 }
 
-nav button{
-  position: relative;
-  top:-100px;
-  color: white;
-  border-radius: 4em;
-  border-color: white;
-  width: 8em;
-  height: 3em;
-  font-size: 1em;
-  background-color: #0C95E4;
+.visible {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.2s linear;
 }

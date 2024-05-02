@@ -1,22 +1,52 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <link rel="stylesheet" type="text/css" href="./css/style.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/roslib@1/build/roslib.min.js"></script>
-    <title>Vite App</title>
-  </head>
-  <body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="stylesheet" type="text/css" href="./css/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/roslib@1/build/roslib.min.js"></script>
+  <title>Vite App</title>
+</head>
+
+<body>
+  <div class="demo-intro visible">
     <canvas class="webgl"></canvas>
-  <div class="ui-overlay">
-  <nav>
-      <button id="connectButton">Connect to robots</button>
-      <button id="spreadButton">Spread</button>
-      <button id="stopButton">Stop robots</button>
-  </nav>
+    <div class="ui-overlay">
+
+      <div class="title-bar">
+        <h1 class="title"> A swarm of robots</h1>
+        <h2 class="subtitle"> AI Education </h2>
+      </div>
+      <div class="button-container">
+        <button class="button" id="connectButton">Connect</button>
+      </div>
+
+      <footer>
+        <img src="./public/icons/BUA_LOGO NEG.svg" alt="My Happy SVG" />
+        <img src="./public/icons/Fari NEG.svg" alt="My Happy SVG" />
+      </footer>
+    </div>
   </div>
-    <script type="module" src="./public/js/main.js"></script>
-  </body>
+
+  <div class="demo-loading">
+    loading...
+  </div>
+
+  <div class="demo-active ">
+    <canvas class="webgl"></canvas>
+    <div class="ui-overlay">
+
+      <div class="button-container">
+        <button class="button" id="spreadButton">Spread / gather</button>
+        <button class="button" id="stopButton">Stop robots</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module" src="./public/js/main.js"></script>
+</body>
+
 </html>
