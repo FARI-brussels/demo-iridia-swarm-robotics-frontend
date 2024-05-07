@@ -23,6 +23,15 @@
   bottom: 220px;
 }
 
+.recenter-container {
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 220px;
+  right: 6rem;
+}
+
 .ui-overlay {
   display: flex;
   flex-direction: column;

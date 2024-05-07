@@ -53,6 +53,12 @@
   border: 2px solid #0C95E4;
 }
 
+ #recenterButton {
+  background-color: #183e91;
+  border: 2px solid #0C95E4;
+  /* margin-left: auto; */
+}
+
 footer {
   display: flex;
   justify-content: center;

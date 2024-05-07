@@ -7,7 +7,7 @@
   <link rel="stylesheet" type="text/css" href="./css/style.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.jsdelivr.net/npm/roslib@1/build/roslib.min.js"></script>
-  <title>Vite App</title>
+  <title> Urban Swarms </title>
 </head>
 
 <body>
@@ -38,12 +38,15 @@
   <div class="demo-active ">
     <canvas class="webgl"></canvas>
     <div class="ui-overlay">
-
-      <div class="button-container">
-        <button class="button" id="spreadButton">Spread / gather</button>
-        <button class="button" id="stopButton">Stop robots</button>
+      <div class="button-wrapper">
+        <div class="button-container">
+          <button class="button" id="spreadButton">Spread / gather</button>
+          <button class="button" id="stopButton">Stop robots</button>
+        </div>
+        <div class="recenter-container">
+          <button class="button" id="recenterButton">re-center</button>
+        </div>
       </div>
-
     </div>
   </div>
 
