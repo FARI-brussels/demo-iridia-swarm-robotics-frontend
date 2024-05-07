@@ -5,6 +5,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 const drones = []; // Array to hold the drones
 const scene = new THREE.Scene();
+const clock = new THREE.Clock();
 
 const randomDronePosition = (min = -15, max = 15) => Math.random() * (max - min) + min;
 
@@ -43,6 +44,75 @@ loader.load("./assets/swarm_map.glb", function (gltf) {
 
 
 // Set up Camera
+const initialCameraPosition = new THREE.Vector3(0, -265, 100);
+const initialCameraQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0)); // Assuming the initial rotation is 0
+let resetAnimation = false;
+let resetStartTime = 0;
+const resetDuration = 2000;
+
+function resetCameraPosition() {
+  resetAnimation = true;
+  controls.enabled = false; // Disable user input via controls during reset
+  resetStartTime = Date.now(); // Record the start time
+}
+
+function updateCameraPosition() {
+  if (!resetAnimation) return;
+
+  const lerpFactor = 0.04;
+  camera.position.lerp(initialCameraPosition, lerpFactor);
+  camera.quaternion.slerp(initialCameraQuaternion, lerpFactor);
+
+  const positionCloseEnough = camera.position.distanceTo(initialCameraPosition) < 1;  // Adjusted for more immediate response
+  const rotationCloseEnough = camera.quaternion.angleTo(initialCameraQuaternion) < 2;  // Adjusted for more immediate response
+
+
+  if (positionCloseEnough && rotationCloseEnough) {
+    camera.position.copy(initialCameraPosition);
+    camera.quaternion.copy(initialCameraQuaternion);
+    resetAnimation = false;
+    controls.enabled = true;
+  }
+
+  const elapsedTime = Date.now() - resetStartTime;
+  if (elapsedTime > resetDuration) {
+    camera.position.copy(initialCameraPosition);
+    camera.quaternion.copy(initialCameraQuaternion);
+    resetAnimation = false;
+    controls.enabled = true;
+  }
+}
+
+//timer
+
+let isInteracting = false;
+let autoResetTimer = null;
+const originalPosition = new THREE.Vector3(0, -265, 100);
+const originalQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0));
+
+
+
+function startAutoResetTimer() {
+  clearAutoResetTimer(); // Clear existing timer to avoid duplicates
+  autoResetTimer = setTimeout(() => {
+    if (!isInteracting && !isCameraAtOriginalPosition()) {
+      resetCameraPosition();
+    }
+  }, 10000); // 20 seconds
+}
+
+function clearAutoResetTimer() {
+  if (autoResetTimer) {
+    clearTimeout(autoResetTimer);
+    autoResetTimer = null;
+  }
+}
+
+function isCameraAtOriginalPosition() {
+  return camera.position.equals(originalPosition) && camera.quaternion.equals(originalQuaternion);
+}
+
+
 
 const camera = new THREE.PerspectiveCamera(15, window.innerWidth / window.innerHeight, 10, 1000);
 camera.position.set(0, -265, 100);
@@ -184,9 +254,10 @@ setTimeout(() => {
 }, 3000);
 
 
-
 function animate() {
   requestAnimationFrame(animate);
+  const deltaTime = clock.getDelta();
+  updateCameraPosition(deltaTime);
   moveMockDrones();
   controls.update();
   renderer.render(scene, camera);
@@ -203,14 +274,36 @@ window.addEventListener('resize', () => {
 
 
 document.addEventListener('DOMContentLoaded', function () {
+  controls.addEventListener('start', function () {
+    isInteracting = true;
+    clearAutoResetTimer(); // Clear the reset timer when user starts interacting
+  });
+
+  controls.addEventListener('end', function () {
+    isInteracting = false;
+    startAutoResetTimer(); // Start or restart the reset timer when interaction ends
+  });
+
   const connectButton = document.getElementById('connectButton');
   const spreadButton = document.getElementById('spreadButton');
   const stopButton = document.getElementById('stopButton');
+  const recenterButton = document.getElementById('recenterButton');
 
   const isConnected = false;
   const introScreen = document.querySelector('.demo-intro')
   const loadingScreen = document.querySelector('.demo-loading')
   const activeScreen = document.querySelector('.demo-active')
+
+
+  startAutoResetTimer();
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') {
+      clearAutoResetTimer(); // Clear the timer when the tab is not visible
+    } else {
+      startAutoResetTimer(); // Restart the timer when the tab becomes visible
+    }
+  });
 
 
   connectButton.addEventListener('click', function () {
@@ -229,6 +322,8 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(data => console.log(data))
       .catch(error => console.error('Error:', error));
   });
+
+  recenterButton.addEventListener('click', resetCameraPosition)
 
   stopButton.addEventListener('click', function () {
     activeScreen.classList.remove('visible')
