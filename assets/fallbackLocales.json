@@ -1,0 +1,18 @@
+[
+  {
+    "research_head": "Prof. Marco Dorigo",
+    "research_lead": "Prof. Mauro Birattari, David Garzon Ramos, Florian Noussa Yao"
+  },
+  {
+    "locale": "en",
+    "explanation_short": "Swarm robotics represents a novel approach to robotic systems inspired by the collaborative behaviors observed in social animals like ants and bees. Unlike traditional robotics, where individual robots operate independently, swarm robotics focuses on enabling interactions and coordination among large groups of robots. This approach harnesses innovative methods to foster collective behaviors, even with robots possessing minimal individual capabilities.\n\nWithin the realm of smart cities, swarm robotics offers transformative potential. Imagine a scenario where drones equipped with sensors and communication capabilities collaborate. One of the robots detects a gas leak. It alerts nearby robots, which converge on the location. Together, they deploy repair tools and seal the leak, ensuring safety and preventing a disaster. \n"
+  },
+  {
+    "locale": "nl",
+    "explanation_short": "Robots worden steeds vaker ingezet in verschillende domeinen, denk aan grasmaaiers en stofzuigers. Ze missen echter vaak het vermogen om met andere robots te interageren. Geïnspireerd door sociale gedrag bij dieren, zoals mieren en bijen, hebben onderzoekers interactie- en coördinatiestrategieën ontwikkeld voor grote teams van robots, waardoor collectief gedrag ontstaat, zelfs bij minimalistische robots. "
+  },
+  {
+    "locale": "fr-FR",
+    "explanation_short": "Les robots deviennent de plus en plus courants dans divers domaines, tels que les tondeuses à gazon et les aspirateurs. Cependant, ils manquent souvent la capacité d'interagir avec d'autres robots. Inspirés par des animaux sociaux tels que les fourmis et les abeilles, les chercheurs ont développé des stratégies d'interaction et de coordination pour de grandes équipes de robots, créant des comportements collectifs même chez les robots minimalistes. "
+  }
+]
