@@ -11,62 +11,64 @@
 </head>
 
 <body>
+  <div class="title-bar visible">
+    <div class="title-wrapper">
+      <h1 class="title"> A swarm of robots </h1>
+      <img class="tooltip" src="./public/icons/tooltip.svg">
+    </div>
+
+    <h2 class="subtitle"> AI Education </h2>
+  </div>
+
+  <div class="card-container">
+    <div class="card">
+      <img role="button" src="./public/icons/close-button.svg" class="close-button" alt="Close">
+      <div class="language-selector">
+        <span class="language" data-locale="nl">NL</span> &nbsp; - &nbsp;
+        <span class="language" data-locale="fr-FR">FR</span> &nbsp; - &nbsp;
+        <span class="language" data-locale="en">EN</span>
+      </div>
+
+      <div class="card-body">
+        <div id="explanation"></div>
+        <div class="researchers-container">
+          <span class="researchers">
+            research head: <span class="research-head"> </span>
+          </span>
+          <span class="researchers">
+            research lead: <span class="research-lead"> </span>
+          </span>
+        </div>
+        <div class="divider"></div>
+        <div class="card-footer"></div>
+      </div>
+    </div>
+  </div>
+
+  <canvas class="webgl"></canvas>
+
+  <div class="button-wrapper">
+    <div class="button-container">
+
+      <div class="control-buttons">
+        <button class="button spread-button" id="spreadButton">Spread / gather</button>
+        <button class="button stop-button" id="stopButton">Stop robots</button>
+      </div>
+      <button class="button connect-button visible" id="connectButton">Connect</button>
+
+      <button class="button recenter-button">
+        <img src="./public/icons/recenter.svg" alt="re-center" />
+      </button>
+
+    </div>
+  </div>
+
+  <footer class="footer visible">
+    <img src="./public/icons/BUA_LOGO NEG.svg" alt="My Happy SVG" />
+    <img src="./public/icons/Fari NEG.svg" alt="My Happy SVG" />
+  </footer>
+
   <img class="backdrop" src="/assets/1920x1080_Backdrop.svg">
-  <div class="demo-intro visible">
-    <canvas class="webgl"></canvas>
-    <div class="ui-overlay">
-
-      <div class="title-bar">
-        <div class="title-wrapper">
-          <h1 class="title"> A swarm of robots </h1>
-          <img class="tooltip" src="./public/icons/tooltip.svg" id="">
-        </div>
-
-        <h2 class="subtitle"> AI Education </h2>
-      </div>
-
-      <div class="card-container">
-        <div class="card">
-          <img role="button" src="./public/icons/close-button.svg" class="close-button" alt="Close">
-          <div class="language-selector">
-            <span class="language">NL</span> &nbsp; - &nbsp;
-            <span class="language">FR</span> &nbsp; - &nbsp;
-            <span class="language">EN</span>
-          </div>
-          some content
-        </div>
-      </div>
-
-      <div class="button-container">
-        <button class="button" id="connectButton">Connect</button>
-      </div>
-
-      <footer>
-        <img src="./public/icons/BUA_LOGO NEG.svg" alt="My Happy SVG" />
-        <img src="./public/icons/Fari NEG.svg" alt="My Happy SVG" />
-      </footer>
-    </div>
-  </div>
-
-  <div class="demo-loading">
-    loading...
-  </div>
-
-  <div class="demo-active ">
-    <canvas class="webgl"></canvas>
-    <div class="ui-overlay">
-      <div class="button-wrapper">
-        <div class="button-container">
-          <button class="button" id="spreadButton">Spread / gather</button>
-          <button class="button" id="stopButton">Stop robots</button>
-        </div>
-        <div class="recenter-container">
-          <button class="button" id="recenterButton">re-center</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <script type="module" src="./public/js/main.js"></script>
 </body>
 
