@@ -1,0 +1,92 @@
+.card-container.visible {
+  transform: translateY(0);
+  transition: all 0.5s ease-out;
+  opacity: 1;
+}
+
+.card-container {
+  position: absolute;
+  bottom: 180px;
+  left: 30%;
+  z-index: 3;
+  transform: translateY(200%);
+  transition: all 0.5s ease-out;
+  opacity: 0;
+}
+
+.card {
+  position: relative;
+  background-color: white;
+  border-radius: 48px;
+  width: 810px;
+  height: 600px;
+  padding: 64px;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', sans-serif;
+}
+
+.close-button {
+  pointer-events: auto;
+  width: 70px;
+  height: 70px;
+  position: absolute;
+  top: -2rem;
+  right: 0;
+}
+
+.language-selector {
+  color:  #4393DE;
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.09px;
+  display: flex;
+  justify-content: end;
+  width: 100%;
+}
+
+.language {
+  pointer-events: auto; 
+  cursor:pointer;
+}
+
+.selected {
+  font-weight: bold;
+  color: #183E91;
+}
+
+.card-body {
+  height: 100%;
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.researchers-container {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.researchers {
+  color: #888;
+  text-transform: uppercase;
+}
+
+.research-head, .research-lead {
+  text-transform: none;
+  color: black;
+}
+
+.divider {
+  margin-top: auto;
+  margin-bottom: 2rem;
+  background-color: #88888880;
+  height: 0.1rem;
+  width: 100%;
+
+}
