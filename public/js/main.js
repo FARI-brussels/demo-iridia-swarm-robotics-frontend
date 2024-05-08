@@ -98,7 +98,7 @@ function startAutoResetTimer() {
     if (!isInteracting && !isCameraAtOriginalPosition()) {
       resetCameraPosition();
     }
-  }, 10000); // 20 seconds
+  }, 5000); // 5 seconds
 }
 
 function clearAutoResetTimer() {
@@ -276,23 +276,74 @@ window.addEventListener('resize', () => {
 document.addEventListener('DOMContentLoaded', function () {
   controls.addEventListener('start', function () {
     isInteracting = true;
-    clearAutoResetTimer(); // Clear the reset timer when user starts interacting
+    clearAutoResetTimer();
   });
 
   controls.addEventListener('end', function () {
     isInteracting = false;
-    startAutoResetTimer(); // Start or restart the reset timer when interaction ends
+    startAutoResetTimer();
   });
-
-  const connectButton = document.getElementById('connectButton');
+  const controlButtons = document.querySelector('.control-buttons')
+  const connectButton = document.querySelector('.connect-button');
   const spreadButton = document.getElementById('spreadButton');
   const stopButton = document.getElementById('stopButton');
-  const recenterButton = document.getElementById('recenterButton');
+  const recenterButton = document.querySelector('.recenter-button');
 
-  const isConnected = false;
-  const introScreen = document.querySelector('.demo-intro')
-  const loadingScreen = document.querySelector('.demo-loading')
-  const activeScreen = document.querySelector('.demo-active')
+  const pageTitle = document.querySelector('.title-bar')
+  const pageFooter = document.querySelector('.footer')
+
+  const languageSpans = document.querySelectorAll('.language');
+  const cardContent = document.getElementById('explanation')
+  const cardContainer = document.querySelector('.card-container')
+
+  const toolTip = document.querySelector('.tooltip')
+  const closeButton = document.querySelector('.close-button')
+
+  const researchHead = document.querySelector('.research-head')
+  const researchLead = document.querySelector('.research-lead')
+  const cardFooter = document.querySelector('.card-footer')
+
+  toolTip.addEventListener('click', () => cardContainer.classList.add('visible'))
+  closeButton.addEventListener('click', () => cardContainer.classList.remove('visible'))
+
+
+  fetch('http://localhost:3000/content')
+    .then(res => res.json())
+    .then(explanations => {
+      const researchers = explanations.find(element => element.hasOwnProperty('research_head') && element.hasOwnProperty('research_lead'));
+      const { logo } = explanations.find(element => element.hasOwnProperty('logo'));
+      cardFooter.innerHTML = logo
+
+      researchHead.innerText = researchers.research_head
+      researchLead.innerText = researchers.research_lead
+
+      const defaultSelected = explanations.find(({ locale }) => locale === 'en');
+
+      if (defaultSelected) {
+        cardContent.innerText = defaultSelected.explanation_short;
+        document.querySelector('.language[data-locale="en"]').classList.add('selected');
+      }
+
+      function updateExplanation(locale) {
+        const explanation = explanations.find(item => item.locale === locale)?.explanation_short;
+        cardContent.innerText = explanation;
+
+      }
+
+      languageSpans.forEach(span => {
+        span.addEventListener('click', function () {
+          languageSpans.forEach(s => s.classList.remove('selected'));
+
+          this.classList.add('selected');
+          const locale = this.getAttribute('data-locale');
+          updateExplanation(locale);
+        });
+      });
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      cardContent.innerText = 'Failed to load content.';
+    });
 
 
   startAutoResetTimer();
@@ -306,9 +357,12 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 
+
+
   connectButton.addEventListener('click', function () {
-    introScreen.classList.remove('visible')
-    activeScreen.classList.add('visible')
+    [pageTitle, pageFooter, connectButton].forEach(e => e.classList.remove('visible'))
+
+    controlButtons.classList.add('visible')
 
     fetch('http://localhost:3000/start-robots')
       .then(response => response.text())
@@ -326,8 +380,10 @@ document.addEventListener('DOMContentLoaded', function () {
   recenterButton.addEventListener('click', resetCameraPosition)
 
   stopButton.addEventListener('click', function () {
-    activeScreen.classList.remove('visible')
-    introScreen.classList.add('visible')
+    [pageTitle, pageFooter, connectButton].forEach(e => e.classList.add('visible'))
+
+    controlButtons.classList.remove('visible')
+
     fetch('http://localhost:3000/stop-robots')
       .then(response => response.text())
       .then(data => console.log(data))
@@ -335,6 +391,11 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 
+
 });
+
+
+
+
 
 
