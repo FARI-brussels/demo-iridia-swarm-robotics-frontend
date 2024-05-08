@@ -237,8 +237,8 @@ function moveMockDrones() {
       }
 
       // constrain bounds, uncomment if needed
-      // drone.position.x = Math.min(Math.max(drone.position.x, -15), 15);
-      // drone.position.z = Math.min(Math.max(drone.position.z, 1), 10); // Keep z between 1 and 10
+      drone.position.x = Math.min(Math.max(drone.position.x, -15), 15);
+      drone.position.z = Math.min(Math.max(drone.position.z, 1), 10); // Keep z between 1 and 10
     }
   });
 }
@@ -303,8 +303,14 @@ document.addEventListener('DOMContentLoaded', function () {
   const researchLead = document.querySelector('.research-lead')
   const cardFooter = document.querySelector('.card-footer')
 
-  toolTip.addEventListener('click', () => cardContainer.classList.add('visible'))
-  closeButton.addEventListener('click', () => cardContainer.classList.remove('visible'))
+  toolTip.addEventListener('click', () => {
+    cardContainer.classList.add('visible')
+    toolTip.classList.add('disabled')
+  })
+  closeButton.addEventListener('click', () => {
+    cardContainer.classList.remove('visible')
+    toolTip.classList.remove('disabled')
+  })
 
 
   fetch('http://localhost:3000/content')

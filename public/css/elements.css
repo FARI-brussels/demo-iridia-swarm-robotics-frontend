@@ -20,6 +20,13 @@
 .tooltip {
   pointer-events: auto;
   cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.2s ease-out;
+}
+
+.tooltip.disabled {
+  opacity: 0.2;
+  transition: opacity 0.2s ease-in;
 }
 
 .subtitle {
@@ -43,6 +50,6 @@ footer {
 
 .backdrop {
   position: absolute;
-  top: 0;
-  margin-top: 6rem;
+  top: 6.7rem;
+  left: 0;
 }

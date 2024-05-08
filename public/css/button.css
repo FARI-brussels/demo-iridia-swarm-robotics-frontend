@@ -16,8 +16,8 @@
   align-items: center;
   color: white;
   background-color: #4393DE;
-  border-radius: 3rem;
   padding: 1rem 2rem;
+  border-radius: 3rem;
   font-weight: 500;
   font-size: 18px;
   text-transform: uppercase;
@@ -28,6 +28,7 @@
   opacity: 0;
   width: 0;
   height: 0;
+  padding: 0;
 }
 
 .control-buttons.visible {
@@ -35,10 +36,12 @@
   gap: 1.5rem;
   width: fit-content;
   height: fit-content;
+
 }
 .connect-button.visible {
   width: fit-content;
   height: fit-content;
+  padding: 1rem 2rem;
 }
 
 .button:active {
