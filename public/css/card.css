@@ -7,7 +7,7 @@
 .card-container {
   position: absolute;
   bottom: 180px;
-  left: 30%;
+  left: 25%;
   z-index: 3;
   transform: translateY(200%);
   transition: all 0.5s ease-out;
@@ -18,7 +18,7 @@
   position: relative;
   background-color: white;
   border-radius: 48px;
-  width: 810px;
+  width: 64rem;
   height: 600px;
   padding: 64px;
   display: flex;
