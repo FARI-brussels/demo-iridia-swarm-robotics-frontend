@@ -2,50 +2,37 @@
 @import './elements.css';
 
 .title-bar {
-  margin-bottom: auto;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 4rem;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   width: 100%;
   align-items: center;
+  opacity: 0;
+  position: absolute;
+  top: 140px;
+  margin-left: 54px;
+  z-index: 3;
+  width: 100%;
+  transition: opacity 0.2s linear;
+}
+
+.button-wrapper {
+  position: absolute;
+  bottom: 220px;
+  width: 100%;
 }
 
 .button-container {
+  position: relative;
   z-index: 2;
   display: flex;
   justify-content: center;
-  position: absolute;
   width: 100%;
   gap: 1rem;
-  bottom: 220px;
-}
-
-.ui-overlay {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2; /* Above the canvas */
-  pointer-events: none; /* Allows click events to pass through to the canvas */
-}
-
-.demo-intro, 
-.demo-loading, 
-.demo-active {
-  opacity: 0;
-  visibility: hidden;
-  transition: visibility 0s 0.2s, opacity 0.2s linear;
 }
 
 .visible {
     visibility: visible;
     opacity: 1;
-    transition: opacity 0.2s linear;
+    transition: all 0.2s linear;
 }

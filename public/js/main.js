@@ -5,6 +5,9 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 const drones = []; // Array to hold the drones
 const scene = new THREE.Scene();
+const clock = new THREE.Clock();
+
+const randomDronePosition = (min = -15, max = 15) => Math.random() * (max - min) + min;
 
 // Number of drones you want to load
 const N = 5; // For example, loading 5 drones
@@ -13,11 +16,18 @@ for (let i = 0; i < N; i++) {
   const drone = loadGLB(scene, "./assets/drone.glb", null,
     {
       scale: { x: 0.02, y: 0.02, z: 0.02 },
-      position: { x: 1000, y: 1000, z: 5 },
-      rotation: { x:  Math.PI/2, y: 0, z: 0 },
+      position: { x: randomDronePosition(), y: randomDronePosition(), z: randomDronePosition(2, 5) },
+      rotation: { x: Math.PI / 2, y: 100, z: 0 },
     },
     (loadedDrone) => { // This callback function is executed after the drone is loaded
-      drones.push(loadedDrone); // Append the loaded drone to the drones array
+      drones.push({
+        ...loadedDrone,
+        direction: {
+          x: Math.random() - 0.5,
+          y: Math.random() - 0.5,
+          z: (Math.random() - 0.5) * 0.2
+        }
+      }); // Append the loaded drone to the drones array
     }
   );
 }
@@ -27,29 +37,89 @@ const loader = new GLTFLoader();
 loader.load("./assets/swarm_map.glb", function (gltf) {
   scene.add(gltf.scene);
   gltf.scene.position.x = 3 // the object has a bit of an offset to the left for some reason, adjust this value if necessary (default is 1)
-  gltf.scene.rotation.x = Math.PI/2
+  gltf.scene.rotation.x = Math.PI / 2
 }, undefined, function (error) {
   console.error('Error loading model:', error);
 });
 
 
 // Set up Camera
+const initialCameraPosition = new THREE.Vector3(0, -265, 100);
+const initialCameraQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0)); // Assuming the initial rotation is 0
+let resetAnimation = false;
+let resetStartTime = 0;
+const resetDuration = 2000;
 
-const aspectRatio = window.innerWidth / window.innerHeight;
-const frustumHeight = 70;
-const frustumWidth = frustumHeight * aspectRatio;
+function resetCameraPosition() {
+  resetAnimation = true;
+  controls.enabled = false; // Disable user input via controls during reset
+  resetStartTime = Date.now(); // Record the start time
+}
 
-const camera = new THREE.OrthographicCamera(
-  -frustumWidth / 2, frustumWidth / 2,
-  frustumHeight / 2, -frustumHeight / 2,
-  0.01, 1000
-);
+function updateCameraPosition() {
+  if (!resetAnimation) return;
 
-camera.position.set(0, -60, 20);
+  const lerpFactor = 0.04;
+  camera.position.lerp(initialCameraPosition, lerpFactor);
+  camera.quaternion.slerp(initialCameraQuaternion, lerpFactor);
+
+  const positionCloseEnough = camera.position.distanceTo(initialCameraPosition) < 1;  // Adjusted for more immediate response
+  const rotationCloseEnough = camera.quaternion.angleTo(initialCameraQuaternion) < 2;  // Adjusted for more immediate response
+
+
+  if (positionCloseEnough && rotationCloseEnough) {
+    camera.position.copy(initialCameraPosition);
+    camera.quaternion.copy(initialCameraQuaternion);
+    resetAnimation = false;
+    controls.enabled = true;
+  }
+
+  const elapsedTime = Date.now() - resetStartTime;
+  if (elapsedTime > resetDuration) {
+    camera.position.copy(initialCameraPosition);
+    camera.quaternion.copy(initialCameraQuaternion);
+    resetAnimation = false;
+    controls.enabled = true;
+  }
+}
+
+//timer
+
+let isInteracting = false;
+let autoResetTimer = null;
+const originalPosition = new THREE.Vector3(0, -265, 100);
+const originalQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0));
+
+
+
+function startAutoResetTimer() {
+  clearAutoResetTimer(); // Clear existing timer to avoid duplicates
+  autoResetTimer = setTimeout(() => {
+    if (!isInteracting && !isCameraAtOriginalPosition()) {
+      resetCameraPosition();
+    }
+  }, 5000); // 5 seconds
+}
+
+function clearAutoResetTimer() {
+  if (autoResetTimer) {
+    clearTimeout(autoResetTimer);
+    autoResetTimer = null;
+  }
+}
+
+function isCameraAtOriginalPosition() {
+  return camera.position.equals(originalPosition) && camera.quaternion.equals(originalQuaternion);
+}
+
+
+
+const camera = new THREE.PerspectiveCamera(15, window.innerWidth / window.innerHeight, 10, 1000);
+camera.position.set(0, -265, 100);
 
 //Set scene lighting
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
 directionalLight.position.set(0, 0, 1);
 scene.add(ambientLight);
@@ -64,13 +134,13 @@ document.body.appendChild(renderer.domElement);
 
 
 //uncomment for debugging
-const gridHelper = new THREE.GridHelper(200, 20);
-const axesHelper = new THREE.AxesHelper(1000);
-const cameraHelper = new THREE.CameraHelper(camera);
+// const gridHelper = new THREE.GridHelper(200, 20);
+// const axesHelper = new THREE.AxesHelper(1000);
+// const cameraHelper = new THREE.CameraHelper(camera);
 
-//scene.add(gridHelper);
-//scene.add(axesHelper);
-//scene.add(cameraHelper);
+// scene.add(gridHelper);
+// scene.add(axesHelper);
+// scene.add(cameraHelper);
 
 
 // Create OrbitControls
@@ -83,6 +153,7 @@ controls.enableZoom = false; // comment out to enable zoom
 
 
 // Function to update drone positions based on the latest message from ROS
+
 function updateDronePositions(newPositions) {
   newPositions.forEach(position => {
     // Assuming robot_id matches the drone's index in the drones array
@@ -94,7 +165,6 @@ function updateDronePositions(newPositions) {
     }
   });
 }
-
 
 // Connecting to ROS
 var ros = new ROSLIB.Ros({
@@ -120,6 +190,59 @@ var robotPositionListener = new ROSLIB.Topic({
   messageType: 'ultralytics_ros/RobotPositionArray' // Replace with your message type
 });
 
+function moveMockDrones() {
+  const separationThreshold = 2.5;  // Minimum allowed distance between drones
+  const speedFactor = 0.05;  // Control the movement speed
+
+  drones.forEach((drone, i) => {
+    if (drone) {
+      // to avoid collision
+      drones.forEach((otherDrone, j) => {
+        if (i !== j && otherDrone) {
+          const dx = otherDrone.position.x - drone.position.x;
+          const dy = otherDrone.position.y - drone.position.y;
+          const dz = otherDrone.position.z - drone.position.z;
+          const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+          // If too close, adjust directions to move them apart
+          if (distance < separationThreshold) {
+            drone.direction.x -= dx * 0.05;
+            drone.direction.y -= dy * 0.05;
+            drone.direction.z -= dz * 0.05;
+          }
+        }
+      });
+
+      // Normalize the direction vector
+      const norm = Math.sqrt(drone.direction.x * drone.direction.x + drone.direction.y * drone.direction.y + drone.direction.z * drone.direction.z);
+      drone.direction.x /= norm;
+      drone.direction.y /= norm;
+      drone.direction.z /= norm;
+
+      // Update drone's position based on its direction
+      drone.position.x += drone.direction.x * speedFactor;
+      // drone.position.y += drone.direction.y * speedFactor;
+
+      // uncomment if movement on z-axis is needed
+      // drone.position.z += drone.direction.z * speedFactor;
+
+      // Adjust drone rotation to match direction of travel
+      drone.rotation.y = Math.atan2(-drone.direction.x, drone.direction.y);
+
+      // Randomly adjust the direction every so often
+      if (Math.random() < 0.02) {  // 2% chance to change direction
+        drone.direction.x = Math.random() - 0.5;
+        drone.direction.y = Math.random() - 0.5;
+        drone.direction.z = (Math.random() - 0.5) * 0.2;
+      }
+
+      // constrain bounds, uncomment if needed
+      drone.position.x = Math.min(Math.max(drone.position.x, -15), 15);
+      drone.position.z = Math.min(Math.max(drone.position.z, 1), 10); // Keep z between 1 and 10
+    }
+  });
+}
+
 
 setTimeout(() => {
   console.log('Wait ends after 3 seconds');
@@ -131,9 +254,11 @@ setTimeout(() => {
 }, 3000);
 
 
-
 function animate() {
   requestAnimationFrame(animate);
+  const deltaTime = clock.getDelta();
+  updateCameraPosition(deltaTime);
+  moveMockDrones();
   controls.update();
   renderer.render(scene, camera);
 }
@@ -142,31 +267,108 @@ animate()
 
 
 window.addEventListener('resize', () => {
-  const newAspectRatio = window.innerWidth / window.innerHeight;
-  const newFrustumWidth = frustumHeight * newAspectRatio;
-  camera.left = -newFrustumWidth / 2;
-  camera.right = newFrustumWidth / 2;
-  camera.top = frustumHeight / 2;
-  camera.bottom = -frustumHeight / 2;
+  camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
 
 document.addEventListener('DOMContentLoaded', function () {
-  const connectButton = document.getElementById('connectButton');
+  controls.addEventListener('start', function () {
+    isInteracting = true;
+    clearAutoResetTimer();
+  });
+
+  controls.addEventListener('end', function () {
+    isInteracting = false;
+    startAutoResetTimer();
+  });
+  const controlButtons = document.querySelector('.control-buttons')
+  const connectButton = document.querySelector('.connect-button');
   const spreadButton = document.getElementById('spreadButton');
   const stopButton = document.getElementById('stopButton');
+  const recenterButton = document.querySelector('.recenter-button');
 
-  const isConnected = false;
-  const introScreen = document.querySelector('.demo-intro')
-  const loadingScreen = document.querySelector('.demo-loading')
-  const activeScreen = document.querySelector('.demo-active')
+  const pageTitle = document.querySelector('.title-bar')
+  const pageFooter = document.querySelector('.footer')
+
+  const languageSpans = document.querySelectorAll('.language');
+  const cardContent = document.getElementById('explanation')
+  const cardContainer = document.querySelector('.card-container')
+
+  const toolTip = document.querySelector('.tooltip')
+  const closeButton = document.querySelector('.close-button')
+
+  const researchHead = document.querySelector('.research-head')
+  const researchLead = document.querySelector('.research-lead')
+  const cardFooter = document.querySelector('.card-footer')
+
+  toolTip.addEventListener('click', () => {
+    cardContainer.classList.add('visible')
+    toolTip.classList.add('disabled')
+  })
+  closeButton.addEventListener('click', () => {
+    cardContainer.classList.remove('visible')
+    toolTip.classList.remove('disabled')
+  })
+
+
+  fetch('http://localhost:3000/content')
+    .then(res => res.json())
+    .then(explanations => {
+      const researchers = explanations.find(element => element.hasOwnProperty('research_head') && element.hasOwnProperty('research_lead'));
+      const { logo } = explanations.find(element => element.hasOwnProperty('logo'));
+      cardFooter.innerHTML = logo
+
+      researchHead.innerText = researchers.research_head
+      researchLead.innerText = researchers.research_lead
+
+      const defaultSelected = explanations.find(({ locale }) => locale === 'en');
+
+      if (defaultSelected) {
+        cardContent.innerText = defaultSelected.explanation_short;
+        document.querySelector('.language[data-locale="en"]').classList.add('selected');
+      }
+
+      function updateExplanation(locale) {
+        const explanation = explanations.find(item => item.locale === locale)?.explanation_short;
+        cardContent.innerText = explanation;
+
+      }
+
+      languageSpans.forEach(span => {
+        span.addEventListener('click', function () {
+          languageSpans.forEach(s => s.classList.remove('selected'));
+
+          this.classList.add('selected');
+          const locale = this.getAttribute('data-locale');
+          updateExplanation(locale);
+        });
+      });
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      cardContent.innerText = 'Failed to load content.';
+    });
+
+
+  startAutoResetTimer();
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') {
+      clearAutoResetTimer(); // Clear the timer when the tab is not visible
+    } else {
+      startAutoResetTimer(); // Restart the timer when the tab becomes visible
+    }
+  });
+
+
 
 
   connectButton.addEventListener('click', function () {
-    introScreen.classList.remove('visible')
-    activeScreen.classList.add('visible')
+    [pageTitle, pageFooter, connectButton].forEach(e => e.classList.remove('visible'))
+
+    controlButtons.classList.add('visible')
 
     fetch('http://localhost:3000/start-robots')
       .then(response => response.text())
@@ -181,9 +383,13 @@ document.addEventListener('DOMContentLoaded', function () {
       .catch(error => console.error('Error:', error));
   });
 
+  recenterButton.addEventListener('click', resetCameraPosition)
+
   stopButton.addEventListener('click', function () {
-    activeScreen.classList.remove('visible')
-    introScreen.classList.add('visible')
+    [pageTitle, pageFooter, connectButton].forEach(e => e.classList.add('visible'))
+
+    controlButtons.classList.remove('visible')
+
     fetch('http://localhost:3000/stop-robots')
       .then(response => response.text())
       .then(data => console.log(data))
@@ -191,6 +397,11 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 
+
 });
+
+
+
+
 
 

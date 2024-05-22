@@ -1,9 +1,32 @@
+@import './card.css';
+@import './button.css';
+
+.title-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+}
+
 .title {
   color: white;
   font-family: 'Inter', sans-serif;
   text-transform: uppercase;
   font-size: 72px;
   font-weight: 900;
+  margin-right: 1rem;
+}
+
+.tooltip {
+  pointer-events: auto;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.2s ease-out;
+}
+
+.tooltip.disabled {
+  opacity: 0.2;
+  transition: opacity 0.2s ease-in;
 }
 
 .subtitle {
@@ -14,48 +37,19 @@
 }
 
 
-@keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
-  }
-  50% {
-    box-shadow: 0 0 2rem 1rem rgba(255, 255, 255, 0.7);
-  }
-}
-
-.button {
-  position: relative;
-  display: flex;
-  flex-wrap: nowrap;
-  width: fit-content;
-  justify-content: space-evenly;
-  align-items: center;
-  color: white;
-  background-color: #4393DE;
-  border-radius: 3rem;
-  padding: 1rem 2rem;
-  font-weight: 500;
-  font-size: 18px;
-  text-transform: uppercase;
-  pointer-events: auto; 
-}
-
-.button:active {
-  animation: glow 1s ease-out;
-}
-
- #connectButton, #spreadButton {
-  border: none;
-}
-
- #stopButton {
-  background-color: #183e91;
-  border: 2px solid #0C95E4;
-}
-
 footer {
+  position: absolute;
+  bottom: 60px;
+  width: 100%;
+  z-index: 2;
+  opacity: 0;
   display: flex;
   justify-content: center;
   gap: 2rem;
-  padding: 2rem 0;
+}
+
+.backdrop {
+  position: absolute;
+  top: 6.7rem;
+  left: 0;
 }

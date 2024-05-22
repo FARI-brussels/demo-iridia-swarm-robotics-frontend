@@ -1,11 +1,36 @@
 import express from 'express';
 import { exec } from 'child_process';
 import cors from 'cors'; // Import cors
+import { attribute } from 'three/examples/jsm/nodes/Nodes.js';
+import fallbackLocales from './assets/fallbackLocales.json' assert { type: "json" };
+
+let strapiUrl = "http://46.226.110.124:1337";
 
 const app = express();
 const port = 3000;
 
 app.use(cors()); // Enable CORS for all routes
+
+app.get('/content', async (req, res) => {
+  const response = await fetch(`${strapiUrl}/api/demos/49?populate=*`);
+  const { data } = await response.json();
+
+
+  const { localizations, explanation_short, research_head, research_lead, caroussel } = data.attributes
+
+  const locales = localizations.data.map(({ attributes }) => ({ locale: attributes.locale, explanation_short: attributes.explanation_short }))
+
+  const iridiaLogo = await fetch(`${strapiUrl}/uploads/iridia_cbde9e8b7c.svg`);
+  const logo = await iridiaLogo.text()
+
+  const content = [
+    { logo },
+    { research_head, research_lead },
+    { locale: 'en', explanation_short }, ...locales
+  ]
+
+  res.send(content || fallbackLocales)
+})
 
 app.get('/start-robots', (req, res) => {
   exec('sh /home/fari/Documents/demo-iridia-swarm-robotics/start_robots-Ongoing.sh', (error, stdout, stderr) => {
