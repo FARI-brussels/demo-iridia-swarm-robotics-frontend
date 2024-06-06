@@ -32,7 +32,7 @@ export function loadGLB(
           }
         });
       }
-
+      object.scale.set(x: 2, y: 2, z: 3)
       object.traverse((child) => {
         if (child.isMesh) {
           child.castShadow = true;

@@ -9,19 +9,32 @@ const clock = new THREE.Clock();
 
 const randomDronePosition = (min = -15, max = 15) => Math.random() * (max - min) + min;
 
+function createCircle(color) {
+  const circleGeometry = new THREE.CircleGeometry(1, 32);
+  // circleGeometry.vertices.shift(); // Remove the center vertex
+  const circleMaterial = new THREE.LineBasicMaterial({ color: color });
+  const circle = new THREE.LineLoop(circleGeometry, circleMaterial);
+  // circle.rotation.x = Math.PI / 2; // Rotate to lay flat on the ground
+  return circle;
+}
+
+
+
+
 // Number of drones you want to load
 const N = 5; // For example, loading 5 drones
 // Load N drones
 for (let i = 0; i < N; i++) {
-  const drone = loadGLB(scene, "./assets/drone.glb", null,
+  const drone = loadGLB(scene, "./assets/drone_merged1.glb", null,
     {
-      scale: { x: 0.02, y: 0.02, z: 0.02 },
+      scale: { x: 0.6, y: 0.6, z: 0.6 },
       position: { x: randomDronePosition(), y: randomDronePosition(), z: randomDronePosition(2, 5) },
-      rotation: { x: Math.PI / 2, y: 100, z: 0 },
+      rotation: { x: Math.PI / 2, y: 100, z: 180 },
       castShadow: true,
     },
     (loadedDrone) => { // This callback function is executed after the drone is loaded
       drones.push({
+
         ...loadedDrone,
         direction: {
           x: Math.random() - 0.5,
@@ -30,6 +43,18 @@ for (let i = 0; i < N; i++) {
         }
       }); // Append the loaded drone to the drones array
       loadedDrone.castShadow = true;
+
+      // const circle = createCircle('#00A607'); // Default color #F00
+      // circle.position.set(0, 0, 0); // Adjust if necessary
+      // loadedDrone.add(circle);
+      // loadedDrone.circle = circle;
+
+      // loadedDrone.traverse((node) => {
+      //   if (node.isMesh) {
+      //     node.material.color.set('#F00');
+      //   }
+      // });
+      console.log({ loadedDrone })
     }
   );
 }
@@ -127,7 +152,7 @@ camera.position.set(0, -265, 100);
 //Set scene lighting
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
-const spotLight = new THREE.SpotLight(0xffffff, 10000, undefined, undefined, 1);
+const spotLight = new THREE.SpotLight(0xffffff, 20000, undefined, undefined, 1);
 spotLight.castShadow = true;
 
 spotLight.position.set(0, 0, 80);
@@ -206,11 +231,14 @@ var robotPositionListener = new ROSLIB.Topic({
   ros: ros,
   name: '/robot_positions', // Replace with your topic name
   messageType: 'ultralytics_ros/RobotPositionArray' // Replace with your message type
+
 });
+
 
 function moveMockDrones() {
   const separationThreshold = 2.5;  // Minimum allowed distance between drones
   const speedFactor = 0.05;  // Control the movement speed
+  const rotationSpeedFactor = 0.05;  // Control the rotation speed
 
   drones.forEach((drone, i) => {
     if (drone) {
@@ -239,13 +267,23 @@ function moveMockDrones() {
 
       // Update drone's position based on its direction
       drone.position.x += drone.direction.x * speedFactor;
-      // drone.position.y += drone.direction.y * speedFactor;
+      drone.position.y += drone.direction.y * speedFactor;
 
       // uncomment if movement on z-axis is needed
       // drone.position.z += drone.direction.z * speedFactor;
 
-      // Adjust drone rotation to match direction of travel
-      drone.rotation.y = Math.atan2(-drone.direction.x, drone.direction.y);
+      // Calculate the target rotation angle for Y-axis only
+      const targetAngle = Math.atan2(drone.direction.x, drone.direction.y);
+
+      // Create a target quaternion for Y-axis rotation only
+      const targetQuaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), targetAngle);
+
+      // Slerp the drone's current rotation towards the target rotation
+      drone.quaternion.slerp(targetQuaternion, rotationSpeedFactor);
+
+      drone.rotation.x = Math.PI / 2
+      drone.rotation.z = 0;
+      // drone.circle.rotation.x = 0
 
       // Randomly adjust the direction every so often
       if (Math.random() < 0.02) {  // 2% chance to change direction
@@ -254,9 +292,12 @@ function moveMockDrones() {
         drone.direction.z = (Math.random() - 0.5) * 0.2;
       }
 
+
+      // console.log({ drone })
+
       // constrain bounds, uncomment if needed
-      drone.position.x = Math.min(Math.max(drone.position.x, -15), 15);
-      drone.position.z = Math.min(Math.max(drone.position.z, 1), 10); // Keep z between 1 and 10
+      // drone.position.x = Math.min(Math.max(drone.position.x, -15), 15);
+      // drone.position.z = Math.min(Math.max(drone.position.z, 1), 10); // Keep z between 1 and 10
     }
   });
 }
