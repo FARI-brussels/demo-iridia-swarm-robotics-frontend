@@ -32,10 +32,19 @@ export function loadGLB(
           }
         });
       }
+
+      object.traverse((child) => {
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
+
       // Apply scale, position, and rotation based on the provided options
       object.scale.set(scale.x, scale.y, scale.z);
       object.position.set(position.x, position.y, position.z);
       object.rotation.set(rotation.x, rotation.y, rotation.z);
+      object.castShadow = true;
       scene.add(object);
       if (callback) callback(object); // Call the callback with the loaded object
     },

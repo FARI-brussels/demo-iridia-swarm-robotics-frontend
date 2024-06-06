@@ -18,6 +18,7 @@ for (let i = 0; i < N; i++) {
       scale: { x: 0.02, y: 0.02, z: 0.02 },
       position: { x: randomDronePosition(), y: randomDronePosition(), z: randomDronePosition(2, 5) },
       rotation: { x: Math.PI / 2, y: 100, z: 0 },
+      castShadow: true,
     },
     (loadedDrone) => { // This callback function is executed after the drone is loaded
       drones.push({
@@ -28,16 +29,22 @@ for (let i = 0; i < N; i++) {
           z: (Math.random() - 0.5) * 0.2
         }
       }); // Append the loaded drone to the drones array
+      loadedDrone.castShadow = true;
     }
   );
 }
 
 //TODO: refactor
 const loader = new GLTFLoader();
+
 loader.load("./assets/swarm_map.glb", function (gltf) {
-  scene.add(gltf.scene);
+  gltf.scene.traverse((node) => {
+    if (node.isMesh) { node.receiveShadow = true; }
+  })
+
   gltf.scene.position.x = 3 // the object has a bit of an offset to the left for some reason, adjust this value if necessary (default is 1)
   gltf.scene.rotation.x = Math.PI / 2
+  scene.add(gltf.scene);
 }, undefined, function (error) {
   console.error('Error loading model:', error);
 });
@@ -119,21 +126,32 @@ camera.position.set(0, -265, 100);
 
 //Set scene lighting
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-directionalLight.position.set(0, 0, 1);
+const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+const spotLight = new THREE.SpotLight(0xffffff, 10000, undefined, undefined, 1);
+spotLight.castShadow = true;
+
+spotLight.position.set(0, 0, 80);
+spotLight.shadow.mapSize = new THREE.Vector2(1024 * 2, 1024 * 2);
+
 scene.add(ambientLight);
-scene.add(directionalLight);
+scene.add(spotLight);
+
 
 
 const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
+renderer.shadowMap.enabled = true; // Enable shadow map
+renderer.shadow
+console.log({ renderer })
 
 document.body.appendChild(renderer.domElement);
 
 
 //uncomment for debugging
+// const lightHelper = new THREE.SpotLightHelper(spotLight)
+// scene.add(lightHelper);
+
 // const gridHelper = new THREE.GridHelper(200, 20);
 // const axesHelper = new THREE.AxesHelper(1000);
 // const cameraHelper = new THREE.CameraHelper(camera);
