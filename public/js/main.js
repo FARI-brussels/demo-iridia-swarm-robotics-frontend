@@ -179,10 +179,11 @@ function updateDronePositions(newPositions) {
     if (drone) {
       drone.position.x = 102 - position.position.x / 10;
       drone.position.y = - 40 + position.position.y / 10;
-      console.log(drone.position)
+      //console.log(drone.position)
     }
   });
 }
+
 
 // Connecting to ROS
 var ros = new ROSLIB.Ros({
@@ -206,6 +207,18 @@ var robotPositionListener = new ROSLIB.Topic({
   ros: ros,
   name: '/robot_positions', // Replace with your topic name
   messageType: 'ultralytics_ros/RobotPositionArray' // Replace with your message type
+});
+
+var isDefectListener = new ROSLIB.Topic({
+  ros: ros,
+  name: '/master/sphero/is_defect', // Replace with your topic name
+  messageType: 'std_msgs/Bool',
+});
+
+var isRepairedListener = new ROSLIB.Topic({
+  ros: ros,
+  name: '/master/sphero/is_repaired', // Replace with your topic name
+  messageType: 'std_msgs/Bool',
 });
 
 function moveMockDrones() {
@@ -268,6 +281,13 @@ setTimeout(() => {
   robotPositionListener.subscribe(function (message) {
     updateDronePositions(message.positions); // Directly update positions
   });
+  isDefectListener.subscribe(function (message) {
+    console.log("is defect", message);// Directly update positions
+  });
+  isRepairedListener.subscribe(function (message) {
+    console.log("is repaired", message);// Directly update positions
+  });
+  
 
 }, 3000);
 
