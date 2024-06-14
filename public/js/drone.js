@@ -106,8 +106,8 @@ export function moveMockDrones(drones) {
       }
 
       // constrain bounds, uncomment if needed
-      // drone.position.x = Math.min(Math.max(drone.position.x, -15), 15);
-      // drone.position.z = Math.min(Math.max(drone.position.z, 1), 10); // Keep z between 1 and 10
+      drone.position.x = Math.min(Math.max(drone.position.x, -15), 15);
+      drone.position.z = Math.min(Math.max(drone.position.z, 1), 2); // Keep z between 1 and 10
     }
   });
 }
