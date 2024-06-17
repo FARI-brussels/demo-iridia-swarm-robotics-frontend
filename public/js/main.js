@@ -2,60 +2,26 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { loadGLB } from './loaders.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { createCircleSprite, updateCircleSpritesColor } from './sprite.js'
+import { droneConfig, DRONE_SETTINGS, moveMockDrones, updateDronePositions, setDroneBlinker, updateDroneStatus } from './drone.js'
+
+
 
 const drones = []; // Array to hold the drones
 const scene = new THREE.Scene();
 const clock = new THREE.Clock();
+const NUMBER_OF_DRONES = 5;
 
-const randomDronePosition = (min = -15, max = 15) => Math.random() * (max - min) + min;
+let blinkInterval = 500; // Interval in milliseconds
+let lastBlinkTime = 0;
 
-function createCircle(color) {
-  const circleGeometry = new THREE.CircleGeometry(1, 32);
-  // circleGeometry.vertices.shift(); // Remove the center vertex
-  const circleMaterial = new THREE.LineBasicMaterial({ color: color });
-  const circle = new THREE.LineLoop(circleGeometry, circleMaterial);
-  // circle.rotation.x = Math.PI / 2; // Rotate to lay flat on the ground
-  return circle;
-}
-
-
-
-
-// Number of drones you want to load
-const N = 5; // For example, loading 5 drones
 // Load N drones
-for (let i = 0; i < N; i++) {
-  const drone = loadGLB(scene, "./assets/drone_merged1.glb", null,
-    {
-      scale: { x: 0.6, y: 0.6, z: 0.6 },
-      position: { x: randomDronePosition(), y: randomDronePosition(), z: randomDronePosition(2, 5) },
-      rotation: { x: Math.PI / 2, y: 100, z: 180 },
-      castShadow: true,
-    },
-    (loadedDrone) => { // This callback function is executed after the drone is loaded
-      drones.push({
-
-        ...loadedDrone,
-        direction: {
-          x: Math.random() - 0.5,
-          y: Math.random() - 0.5,
-          z: (Math.random() - 0.5) * 0.2
-        }
-      }); // Append the loaded drone to the drones array
-      loadedDrone.castShadow = true;
-
-      // const circle = createCircle('#00A607'); // Default color #F00
-      // circle.position.set(0, 0, 0); // Adjust if necessary
-      // loadedDrone.add(circle);
-      // loadedDrone.circle = circle;
-
-      // loadedDrone.traverse((node) => {
-      //   if (node.isMesh) {
-      //     node.material.color.set('#F00');
-      //   }
-      // });
-      console.log({ loadedDrone })
-    }
+for (let i = 0; i < NUMBER_OF_DRONES; i++) {
+  const drone = loadGLB(
+    scene, "./assets/drone_merged1.glb",
+    null,
+    DRONE_SETTINGS.options(),
+    (drone) => drones.push(droneConfig(drone))
   );
 }
 
@@ -64,7 +30,7 @@ const loader = new GLTFLoader();
 
 loader.load("./assets/swarm_map.glb", function (gltf) {
   gltf.scene.traverse((node) => {
-    if (node.isMesh) { node.receiveShadow = true; }
+    if (node.isMesh) node.receiveShadow = true;
   })
 
   gltf.scene.position.x = 3 // the object has a bit of an offset to the left for some reason, adjust this value if necessary (default is 1)
@@ -194,6 +160,7 @@ controls.screenSpacePanning = false;
 controls.enableZoom = false; // comment out to enable zoom
 
 
+<<<<<<< HEAD
 
 // Function to update drone positions based on the latest message from ROS
 
@@ -211,6 +178,8 @@ function updateDronePositions(newPositions) {
   });
 }
 
+=======
+>>>>>>> 207258a3e5e5419a37487439c9924eb80559dbfa
 // Connecting to ROS
 var ros = new ROSLIB.Ros({
   url: 'ws://localhost:9090' // Replace with your websocket server address
@@ -237,79 +206,11 @@ var robotPositionListener = new ROSLIB.Topic({
 });
 
 
-function moveMockDrones() {
-  const separationThreshold = 2.5;  // Minimum allowed distance between drones
-  const speedFactor = 0.05;  // Control the movement speed
-  const rotationSpeedFactor = 0.05;  // Control the rotation speed
-
-  drones.forEach((drone, i) => {
-    if (drone) {
-      // to avoid collision
-      drones.forEach((otherDrone, j) => {
-        if (i !== j && otherDrone) {
-          const dx = otherDrone.position.x - drone.position.x;
-          const dy = otherDrone.position.y - drone.position.y;
-          const dz = otherDrone.position.z - drone.position.z;
-          const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-
-          // If too close, adjust directions to move them apart
-          if (distance < separationThreshold) {
-            drone.direction.x -= dx * 0.05;
-            drone.direction.y -= dy * 0.05;
-            drone.direction.z -= dz * 0.05;
-          }
-        }
-      });
-
-      // Normalize the direction vector
-      const norm = Math.sqrt(drone.direction.x * drone.direction.x + drone.direction.y * drone.direction.y + drone.direction.z * drone.direction.z);
-      drone.direction.x /= norm;
-      drone.direction.y /= norm;
-      drone.direction.z /= norm;
-
-      // Update drone's position based on its direction
-      drone.position.x += drone.direction.x * speedFactor;
-      drone.position.y += drone.direction.y * speedFactor;
-
-      // uncomment if movement on z-axis is needed
-      // drone.position.z += drone.direction.z * speedFactor;
-
-      // Calculate the target rotation angle for Y-axis only
-      const targetAngle = Math.atan2(drone.direction.x, drone.direction.y);
-
-      // Create a target quaternion for Y-axis rotation only
-      const targetQuaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), targetAngle);
-
-      // Slerp the drone's current rotation towards the target rotation
-      drone.quaternion.slerp(targetQuaternion, rotationSpeedFactor);
-
-      drone.rotation.x = Math.PI / 2
-      drone.rotation.z = 0;
-      // drone.circle.rotation.x = 0
-
-      // Randomly adjust the direction every so often
-      if (Math.random() < 0.02) {  // 2% chance to change direction
-        drone.direction.x = Math.random() - 0.5;
-        drone.direction.y = Math.random() - 0.5;
-        drone.direction.z = (Math.random() - 0.5) * 0.2;
-      }
-
-
-      // console.log({ drone })
-
-      // constrain bounds, uncomment if needed
-      // drone.position.x = Math.min(Math.max(drone.position.x, -15), 15);
-      // drone.position.z = Math.min(Math.max(drone.position.z, 1), 10); // Keep z between 1 and 10
-    }
-  });
-}
-
-
 setTimeout(() => {
   console.log('Wait ends after 3 seconds');
   // Subscribing to the ROS topic
   robotPositionListener.subscribe(function (message) {
-    updateDronePositions(message.positions); // Directly update positions
+    updateDronePositions({ drones, newPositions: message.positions }); // Directly update positions
   });
 
 }, 3000);
@@ -319,7 +220,19 @@ function animate() {
   requestAnimationFrame(animate);
   const deltaTime = clock.getDelta();
   updateCameraPosition(deltaTime);
-  moveMockDrones();
+
+
+  //uncomment this when lights are ready to be used
+
+  // const elapsedTime = clock.getElapsedTime();
+
+  // if (elapsedTime - lastBlinkTime > blinkInterval / 1000) {
+  //   drones.forEach(setDroneBlinker);
+  //   lastBlinkTime = elapsedTime;
+  // }
+
+
+  moveMockDrones(drones);
   controls.update();
   renderer.render(scene, camera);
 }
@@ -429,18 +342,29 @@ document.addEventListener('DOMContentLoaded', function () {
   connectButton.addEventListener('click', function () {
     [pageTitle, pageFooter, connectButton].forEach(e => e.classList.remove('visible'))
 
+    drones.forEach(drone => updateCircleSpritesColor(drone, '#2BF2FF'))
+
+
     controlButtons.classList.add('visible')
 
     fetch('http://localhost:3000/start-robots')
       .then(response => response.text())
       .then(data => console.log(data))
-      .catch(error => console.error('Error:', error));
+      .then(() => drones.forEach(() => updateDroneStatus(drone, { connected: true })))
+      .catch(error => {
+        drones.forEach((drone) => updateDroneStatus(drone, { connected: false }))
+        console.error('Error:', error)
+
+      }
+      );
   });
 
+  //logic that implements gather/spread status
   spreadButton.addEventListener('click', function () {
     fetch('http://localhost:3000/spread')
       .then(response => response.text())
       .then(data => console.log(data))
+      .then(() => drones.forEach((drone) => updateDroneStatus(drone, { exploring: true })))
       .catch(error => console.error('Error:', error));
   });
 
@@ -454,6 +378,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fetch('http://localhost:3000/stop-robots')
       .then(response => response.text())
       .then(data => console.log(data))
+      .then(() => drones.forEach(() => updateDroneStatus(drone, { connected: false, exploring: false, gathering: false })))
       .catch(error => console.error('Error:', error));
   });
 

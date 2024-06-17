@@ -32,7 +32,7 @@ export function loadGLB(
           }
         });
       }
-      object.scale.set(x: 2, y: 2, z: 3)
+
       object.traverse((child) => {
         if (child.isMesh) {
           child.castShadow = true;
@@ -46,8 +46,11 @@ export function loadGLB(
       object.rotation.set(rotation.x, rotation.y, rotation.z);
       object.castShadow = true;
       scene.add(object);
+
       if (callback) callback(object); // Call the callback with the loaded object
+      return object;
     },
+
     (xhr) => {
       console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
     },
