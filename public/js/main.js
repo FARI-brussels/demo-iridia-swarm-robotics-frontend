@@ -160,26 +160,7 @@ controls.screenSpacePanning = false;
 controls.enableZoom = false; // comment out to enable zoom
 
 
-<<<<<<< HEAD
 
-// Function to update drone positions based on the latest message from ROS
-
-function updateDronePositions(newPositions) {
-  newPositions.forEach(position => {
-    // Assuming robot_id matches the drone's index in the drones array
-    const drone = drones[position.robot_id];
-    if (drone) {
-      //drone.position.x = 102 - position.position.x / 20;
-      //drone.position.y = - 40 + position.position.y / 20;
-      drone.position.x = 50 - position.position.x / 15;
-      drone.position.y = - 40 + position.position.y / 15;
-      console.log(drone.position)
-    }
-  });
-}
-
-=======
->>>>>>> 207258a3e5e5419a37487439c9924eb80559dbfa
 // Connecting to ROS
 var ros = new ROSLIB.Ros({
   url: 'ws://localhost:9090' // Replace with your websocket server address

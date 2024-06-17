@@ -118,8 +118,8 @@ export function updateDronePositions({ drones, newPositions }) {
     // Assuming robot_id matches the drone's index in the drones array
     const drone = drones[position.robot_id];
     if (drone) {
-      drone.position.x = 102 - position.position.x / 10;
-      drone.position.y = - 40 + position.position.y / 10;
+      drone.position.x = 50 - position.position.x / 15;
+      drone.position.y = - 40 + position.position.y / 15;
     }
   });
 }
