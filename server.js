@@ -33,7 +33,7 @@ app.get('/content', async (req, res) => {
 })
 
 app.get('/start-robots', (req, res) => {
-  exec('sh /home/fari/Documents/demo-iridia-swarm-robotics/start_robots.sh', (error, stdout, stderr) => {
+  exec('bash /home/fari/Documents/demo-iridia-swarm-robotics/start_robots.sh', (error, stdout, stderr) => {
     if (error) {
       console.error(`exec error: ${error}`);
       return res.send(`Error executing script: ${error}`);
@@ -54,7 +54,7 @@ app.get('/spread', (req, res) => {
 
 
 app.get('/stop-robots', (req, res) => {
-  exec('sh /home/fari/Documents/demo-iridia-swarm-robotics/stop_robots.sh', (error, stdout, stderr) => {
+  exec('bash /home/fari/Documents/demo-iridia-swarm-robotics/stop_robots.sh', (error, stdout, stderr) => {
     if (error) {
       console.error(`exec error: ${error}`);
       return res.send(`Error executing script: ${error}`);
