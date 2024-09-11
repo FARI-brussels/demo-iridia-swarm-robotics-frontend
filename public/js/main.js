@@ -354,7 +354,6 @@ document.addEventListener('DOMContentLoaded', function () {
       .catch(error => console.error('Error:', error));
   });
 
-<<<<<<< HEAD
   recenterButton.addEventListener('click', function () {
     resetCameraPosition();  // Call your reset camera function
     fetch('http://localhost:3000/reset-robots')
@@ -363,10 +362,6 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(() => drones.forEach(() => updateDroneStatus(drone, { connected: false, exploring: false, gathering: false })))
       .catch(error => console.error('Error:', error));
   });
-=======
-  recenterButton.addEventListener('click', resetCameraPosition)
-  refreshButton.addEventListener('click', refreshPage)
->>>>>>> 78e331104065c1671f4af2fe2b4d983eaaa84d1f
 
 
   stopButton.addEventListener('click', async  function () {
