@@ -110,6 +110,10 @@ function isCameraAtOriginalPosition() {
   return camera.position.equals(originalPosition) && camera.quaternion.equals(originalQuaternion);
 }
 
+function refreshPage(){
+  window.location.reload()
+}
+
 
 
 const camera = new THREE.PerspectiveCamera(15, window.innerWidth / window.innerHeight, 10, 1000);
@@ -243,6 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const spreadButton = document.getElementById('spreadButton');
   const stopButton = document.getElementById('stopButton');
   const recenterButton = document.querySelector('.recenter-button');
+  const refreshButton = document.querySelector('.refresh-button');
 
   const pageTitle = document.querySelector('.title-bar')
   const pageFooter = document.querySelector('.footer')
@@ -349,6 +354,7 @@ document.addEventListener('DOMContentLoaded', function () {
       .catch(error => console.error('Error:', error));
   });
 
+<<<<<<< HEAD
   recenterButton.addEventListener('click', function () {
     resetCameraPosition();  // Call your reset camera function
     fetch('http://localhost:3000/reset-robots')
@@ -357,6 +363,10 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(() => drones.forEach(() => updateDroneStatus(drone, { connected: false, exploring: false, gathering: false })))
       .catch(error => console.error('Error:', error));
   });
+=======
+  recenterButton.addEventListener('click', resetCameraPosition)
+  refreshButton.addEventListener('click', refreshPage)
+>>>>>>> 78e331104065c1671f4af2fe2b4d983eaaa84d1f
 
 
   stopButton.addEventListener('click', async  function () {
@@ -381,6 +391,36 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
 });
+
+
+const timeoutDuration = 300000; 
+let timeout;
+
+function startTimeout() {
+    timeout = setTimeout(refreshPage, timeoutDuration);
+}
+
+function resetTimeout() {
+    clearTimeout(timeout);
+    startTimeout();
+}
+
+function debounce(func, delay) {
+    let debounceTimer;
+    return function() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(func, delay);
+    }
+}
+
+window.onload = startTimeout;
+document.onmousemove = debounce(resetTimeout, 500);
+document.onmousedown = resetTimeout;
+document.onkeypress = resetTimeout;
+document.ontouchstart = debounce(resetTimeout, 500);
+document.ontouchend = debounce(resetTimeout, 500);
+document.onclick = resetTimeout;
+document.onscroll = debounce(resetTimeout, 500);
 
 
 
