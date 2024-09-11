@@ -63,6 +63,16 @@ app.get('/stop-robots', (req, res) => {
   });
 });
 
+app.get('/reset-robots', (req, res) => {
+  exec('rostopic pub /master/sphero/sleep std_msgs/Bool "data: true"', (error, stdout, stderr) => {
+    if (error) {
+      console.error(`exec error: ${error}`);
+      return res.send(`Error executing script: ${error}`);
+    }
+    res.send(`Script executed successfully: ${stdout}`);
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });

@@ -9,14 +9,21 @@ export const DRONE_SETTINGS = {
   options: () => ({
     scale: { x: 0.6, y: 0.6, z: 0.6 },
     position: {
-      x: randomDronePosition(),
-      y: randomDronePosition(),
-      z: randomDronePosition(2, 5)
+      //x: randomDronePosition(),
+      //y: randomDronePosition(),
+      //z: randomDronePosition(2, 5)
+      x:1000,
+      y:1000,
+      //z: randomDronePosition(2, 5)
+      z:2
     },
     rotation: {
+      //x: Math.PI / 2,
+      //y: 100,
+      //z: 180
       x: Math.PI / 2,
-      y: 100,
-      z: 180
+      y:0,
+      z:0
     },
     castShadow: true,
   }),
@@ -36,8 +43,8 @@ export const DRONE_SETTINGS = {
 export const droneConfig = (drone) => {
   //uncomment this when lights are ready to be used
 
-  // const circleSprite = createCircleSprite('#F00');
-  // drone.add(circleSprite);
+  const circleSprite = createCircleSprite('#F00');
+  drone.add(circleSprite);
 
   // drone.circleSprite = circleSprite;
   // drone.circleSprite.position.x = 0
@@ -111,18 +118,41 @@ export function moveMockDrones(drones) {
     }
   });
 }
+function getColorByIndex(index) {
+  const colors = [
+      "#0000FF",    // Blue
+      "#00FF00",    // Green
+      "#FFA500",     // Orange
+      "#FF0000",    // Red
+      "#FFFFFF",  // white
+  ];
+
+  // Check if the index is within the valid range
+  if (index >= 0 && index < colors.length) {
+      return colors[index];
+  } else {
+      return null;  // Return null or an appropriate value if the index is out of range
+  }
+}
 
 // Function to update drone positions based on the latest message from ROS
-export function updateDronePositions({ drones, newPositions }) {
-  newPositions.forEach(position => {
-    // Assuming robot_id matches the drone's index in the drones array
-    const drone = drones[position.robot_id];
-    if (drone) {
-      drone.position.x = 50 - position.position.x / 15;
-      drone.position.y = - 40 + position.position.y / 15;
+export function updateDronePositions({ drones, newPositions, drone_type }) {
+  // Iterate over drones instead of positions
+  drones.forEach((drone, index) => {
+    const position = newPositions[index]; // Check if there's a corresponding position
+
+    if (position) {
+      // Update the drone's position if a corresponding position exists
+      drone.position.x = 55 - position.position.x / 15;
+      drone.position.y = -40 + position.position.y / 15;
+      updateCircleSpritesColor(drone, getColorByIndex(position.robot_type));
+    } else {
+      // If no corresponding position, move the drone to x: 1000
+      drone.position.x = 1000;
     }
   });
 }
+
 
 export function setDroneBlinker(drone) {
   if (!drone.status.connected) {
