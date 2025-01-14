@@ -46,10 +46,10 @@ export const droneConfig = (drone) => {
   const circleSprite = createCircleSprite('#F00');
   drone.add(circleSprite);
 
-  // drone.circleSprite = circleSprite;
-  // drone.circleSprite.position.x = 0
-  // drone.circleSprite.position.y = 0.5
-  // drone.circleSprite.position.z = -2
+  drone.circleSprite = circleSprite;
+  drone.circleSprite.position.x = 0
+  drone.circleSprite.position.y = 0.5
+  drone.circleSprite.position.z = -2
 
   drone.status = DRONE_SETTINGS.status;
   drone.direction = DRONE_SETTINGS.direction();

@@ -275,25 +275,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   fetch('http://localhost:3000/content')
     .then(res => res.json())
-    .then(explanations => {
-      const researchers = explanations.find(element => element.hasOwnProperty('research_head') && element.hasOwnProperty('research_lead'));
-      const { logo } = explanations.find(element => element.hasOwnProperty('logo'));
-      cardFooter.innerHTML = logo
-
-      researchHead.innerText = researchers.research_head
-      researchLead.innerText = researchers.research_lead
-
-      const defaultSelected = explanations.find(({ locale }) => locale === 'en');
-
-      if (defaultSelected) {
-        cardContent.innerText = defaultSelected.explanation_short;
-        document.querySelector('.language[data-locale="en"]').classList.add('selected');
-      }
-
+    .then(cmsData => {
+      cardFooter.innerHTML = cmsData.logos.map(logo => `<img src="${logo}" style="height: 50px; margin-right: 2rem">`).join('')
+      researchHead.innerText = cmsData.research_head
+      researchLead.innerText = cmsData.research_lead
+      cardContent.innerText = cmsData.description.en
+      document.querySelector('.language[data-locale="en"]').classList.add('selected');
+      
       function updateExplanation(locale) {
-        const explanation = explanations.find(item => item.locale === locale)?.explanation_short;
-        cardContent.innerText = explanation;
-
+        cardContent.innerText = cmsData.description[locale];
       }
 
       languageSpans.forEach(span => {

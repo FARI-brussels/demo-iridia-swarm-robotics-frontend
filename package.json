@@ -16,6 +16,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "fari-directus-parser": "^1.0.66",
     "gsap": "^3.12.5",
     "roslib": "^1.4.1",
     "three": "^0.161.0"
