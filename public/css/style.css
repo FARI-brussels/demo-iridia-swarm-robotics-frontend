@@ -31,8 +31,35 @@
   gap: 1rem;
 }
 
+
+
+
+.info-card {
+  opacity: 0;
+  position: absolute;
+  top: 4.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4393DE80;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+  font-size: 1.3rem;
+  line-height: 2.5rem;
+  color: white;
+  list-style: none;
+  z-index: 4;
+}
+
+
+.list-item {
+  list-style: none;
+}
+
 .visible {
     visibility: visible;
     opacity: 1;
     transition: all 0.2s linear;
 }
+

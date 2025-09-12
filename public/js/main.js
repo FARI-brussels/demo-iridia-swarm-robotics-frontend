@@ -263,6 +263,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const researchLead = document.querySelector('.research-lead')
   const cardFooter = document.querySelector('.card-footer')
 
+  const infoCard = document.querySelector('.info-card')
+
   toolTip.addEventListener('click', () => {
     cardContainer.classList.add('visible')
     toolTip.classList.add('disabled')
@@ -322,6 +324,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     controlButtons.classList.add('visible')
+    infoCard.classList.add('visible')
+
 
     fetch('http://localhost:3000/start-robots')
       .then(response => response.text())
@@ -358,6 +362,7 @@ document.addEventListener('DOMContentLoaded', function () {
     [pageTitle, pageFooter, connectButton].forEach(e => e.classList.add('visible'))
     
     controlButtons.classList.remove('visible')
+    infoCard.classList.remove('visible')
 
     fetch('http://localhost:3000/stop-robots')
       .then(response => response.text())
