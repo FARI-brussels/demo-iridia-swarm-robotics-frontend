@@ -10,7 +10,7 @@ import { droneConfig, DRONE_SETTINGS, moveMockDrones, updateDronePositions, setD
 const drones = []; // Array to hold the drones
 const scene = new THREE.Scene();
 const clock = new THREE.Clock();
-const NUMBER_OF_DRONES = 5;
+const NUMBER_OF_DRONES = 8;
 
 let blinkInterval = 500; // Interval in milliseconds
 let lastBlinkTime = 0;
@@ -217,7 +217,7 @@ function animate() {
   // }
 
 
-  moveMockDrones(drones);
+  //moveMockDrones(drones);
   controls.update();
   renderer.render(scene, camera);
 }
@@ -348,12 +348,19 @@ document.addEventListener('DOMContentLoaded', function () {
       .catch(error => console.error('Error:', error));
   });
 
-  recenterButton.addEventListener('click', resetCameraPosition)
-  refreshButton.addEventListener('click', refreshPage)
+  recenterButton.addEventListener('click', function () {
+    resetCameraPosition();  // Call your reset camera function
+    fetch('http://localhost:3000/reset-robots')
+      .then(response => response.text())
+      .then(data => console.log(data))
+      .then(() => drones.forEach(() => updateDroneStatus(drone, { connected: false, exploring: false, gathering: false })))
+      .catch(error => console.error('Error:', error));
+  });
 
-  stopButton.addEventListener('click', function () {
+
+  stopButton.addEventListener('click', async  function () {
     [pageTitle, pageFooter, connectButton].forEach(e => e.classList.add('visible'))
-
+    
     controlButtons.classList.remove('visible')
     infoCard.classList.remove('visible')
 
@@ -362,9 +369,16 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(data => console.log(data))
       .then(() => drones.forEach(() => updateDroneStatus(drone, { connected: false, exploring: false, gathering: false })))
       .catch(error => console.error('Error:', error));
+
+      await sleep(2000); 
+      window.location.reload(); 
+      
   });
 
 
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
 });
 

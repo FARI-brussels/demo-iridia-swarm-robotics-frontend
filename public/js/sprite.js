@@ -23,9 +23,10 @@ export function createCircleSprite(color) {
 
 
 export function updateCircleSpritesColor(drone, hexColor) {
-  if (!drone?.circleSprite || !hexColor) return
+  const sprite = drone?.children?.find(child => child.type === "Sprite");
+  if (!sprite || !hexColor) return
 
-  const canvas = drone.circleSprite.material.map.image;
+  const canvas = sprite.material.map.image;
   const context = canvas.getContext('2d');
 
   context.clearRect(0, 0, canvas.width, canvas.height);
@@ -36,5 +37,5 @@ export function updateCircleSpritesColor(drone, hexColor) {
   context.fillStyle = hexColor;
   context.fill();
 
-  drone.circleSprite.material.map.needsUpdate = true;
+  sprite.material.map.needsUpdate = true;
 }
